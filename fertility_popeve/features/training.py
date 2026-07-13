@@ -8,15 +8,6 @@ def build_training_matrix(
     feature_path: str,
     phenotype_path: str,
 ) -> pd.DataFrame:
-    """
-    Build sample-level training matrix.
-
-    VCF genotype
-        +
-    popEVE features
-        +
-    phenotype
-    """
 
     feature = pd.read_parquet(feature_path)
 
@@ -43,3 +34,13 @@ def build_training_matrix(
     )
 
     return merged
+
+
+def save_training_matrix(
+    df: pd.DataFrame,
+    output_path: str,
+):
+    df.to_parquet(
+        output_path,
+        index=False,
+    )
