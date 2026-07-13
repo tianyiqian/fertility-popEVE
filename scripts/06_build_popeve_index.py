@@ -42,7 +42,10 @@ def main():
 
     df = pd.DataFrame(records)
 
-    out = Path("data/reference/popeve_index.parquet")
+    out = (
+        Path(cfg["paths"]["reference_data"])
+        / "popeve_index.parquet"
+    )
 
     out.parent.mkdir(
         parents=True,
@@ -52,11 +55,8 @@ def main():
     df.to_parquet(out, index=False)
 
     print(df)
-
     print()
-
     print(f"Total CSV: {len(df)}")
-
     print(f"Saved: {out}")
 
 
