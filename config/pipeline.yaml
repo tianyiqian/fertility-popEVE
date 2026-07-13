@@ -1,0 +1,10 @@
+steps:
+  - scripts/01_run_vep.py
+  - scripts/02_extract_features.py
+  - scripts/03_filter_missense.py
+  - scripts/04_prepare_protein.py
+  - scripts/05_build_reference_mapping.py
+  - scripts/06_build_popeve_index.py
+  - scripts/07_build_foundation_features.py
+  - scripts/08_build_feature_matrix.py
+  - scripts/09_validate_feature_matrix.py

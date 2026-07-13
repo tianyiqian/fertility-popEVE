@@ -15,11 +15,14 @@ paths:
   annotation: data/annotation
   missense: data/missense
   protein: data/protein
+  features: data/features
   embedding: data/embedding
   gp: data/gp
 
+  reference_data: data/reference
+
   logs: logs
-  output: output
+  outputs: outputs
 
 gatk:
   threads: 4

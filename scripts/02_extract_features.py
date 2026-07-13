@@ -8,36 +8,42 @@ from fertility_popeve.annotation.extractor import (
 )
 from fertility_popeve.utils.config import load_config
 
-config = load_config()
 
-vcf = Path(config["paths"]["annotation"]) / "joint_chr22.vep.vcf"
-out = Path(config["paths"]["annotation"]) / "variant_table.parquet"
+def main():
+    config = load_config()
 
-fields = get_csq_fields(vcf)
+    vcf = Path(config["paths"]["annotation"]) / "joint_chr22.vep.vcf"
+    out = Path(config["paths"]["annotation"]) / "variant_table.parquet"
 
-rows = []
+    fields = get_csq_fields(vcf)
 
-with open(vcf) as f:
-    for line in f:
-        if line.startswith("#"):
-            continue
+    rows = []
 
-        cols = line.rstrip().split("\t")
+    with open(vcf) as f:
+        for line in f:
+            if line.startswith("#"):
+                continue
 
-        record = {
-            "chrom": cols[0],
-            "pos": int(cols[1]),
-            "ref": cols[3],
-            "alt": cols[4],
-        }
+            cols = line.rstrip().split("\t")
 
-        csq = parse_csq(cols[7], fields)
-        record.update(extract_feature(csq))
+            record = {
+                "chrom": cols[0],
+                "pos": int(cols[1]),
+                "ref": cols[3],
+                "alt": cols[4],
+            }
 
-        rows.append(record)
+            csq = parse_csq(cols[7], fields)
+            record.update(extract_feature(csq))
 
-df = pd.DataFrame(rows)
-df.to_parquet(out, index=False)
+            rows.append(record)
 
-print(df.head())
-print(f"\nSaved {len(df)} variants -> {out}")
+    df = pd.DataFrame(rows)
+    df.to_parquet(out, index=False)
+
+    print(df.head())
+    print(f"\nSaved {len(df)} variants -> {out}")
+
+
+if __name__ == "__main__":
+    main()

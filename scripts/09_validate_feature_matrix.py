@@ -1,40 +1,47 @@
 #!/usr/bin/env python3
 
+from pathlib import Path
+
 import pandas as pd
 
-FILE = "data/features/feature_matrix.parquet"
+from fertility_popeve.utils.config import load_config
 
-df = pd.read_parquet(FILE)
 
-print("=" * 60)
-print("Feature Matrix Validation")
-print("=" * 60)
+def main():
+    config = load_config()
 
-print(f"Rows    : {len(df)}")
-print(f"Columns : {len(df.columns)}")
+    file = Path(config["paths"]["features"]) / "feature_matrix.parquet"
 
-print()
+    df = pd.read_parquet(file)
 
-print("Duplicate variants:")
-dup = df.duplicated(subset=["chrom", "pos", "ref", "alt"]).sum()
-print(dup)
+    print("=" * 60)
+    print("Feature Matrix Validation")
+    print("=" * 60)
 
-print()
+    print(f"Rows    : {len(df)}")
+    print(f"Columns : {len(df.columns)}")
+    print()
 
-print("Coverage:")
-print(df["found"].value_counts())
+    print("Duplicate variants:")
+    dup = df.duplicated(subset=["chrom", "pos", "ref", "alt"]).sum()
+    print(dup)
+    print()
 
-print()
+    print("Coverage:")
+    print(df["found"].value_counts())
+    print()
 
-print("Missing values:")
-print(df.isna().sum())
+    print("Missing values:")
+    print(df.isna().sum())
+    print()
 
-print()
+    print("Data types:")
+    print(df.dtypes)
+    print()
 
-print("Data types:")
-print(df.dtypes)
+    print("Numeric summary:")
+    print(df[["popEVE", "EVE", "ESM1v"]].describe())
 
-print()
 
-print("Numeric summary:")
-print(df[["popEVE", "EVE", "ESM1v"]].describe())
+if __name__ == "__main__":
+    main()

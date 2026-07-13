@@ -4,30 +4,36 @@ import pandas as pd
 from fertility_popeve.utils.config import load_config
 from fertility_popeve.variant.protein_parser import parse_hgvsp
 
-config = load_config()
 
-input_file = Path(config["paths"]["missense"]) / "missense_table.parquet"
-output_file = Path(config["paths"]["protein"]) / "protein_table.parquet"
+def main():
+    config = load_config()
 
-output_file.parent.mkdir(parents=True, exist_ok=True)
+    input_file = Path(config["paths"]["missense"]) / "missense_table.parquet"
+    output_file = Path(config["paths"]["protein"]) / "protein_table.parquet"
 
-df = pd.read_parquet(input_file)
+    output_file.parent.mkdir(parents=True, exist_ok=True)
 
-protein_records = []
+    df = pd.read_parquet(input_file)
 
-for _, row in df.iterrows():
-    result = parse_hgvsp(row["hgvsp"])
+    protein_records = []
 
-    if result is None:
-        continue
+    for _, row in df.iterrows():
+        result = parse_hgvsp(row["hgvsp"])
 
-    protein_records.append({
-        **row.to_dict(),
-        **result
-    })
+        if result is None:
+            continue
 
-protein_df = pd.DataFrame(protein_records)
-protein_df.to_parquet(output_file, index=False)
+        protein_records.append({
+            **row.to_dict(),
+            **result
+        })
 
-print(protein_df.head())
-print(f"\nSaved {len(protein_df)} protein variants -> {output_file}")
+    protein_df = pd.DataFrame(protein_records)
+    protein_df.to_parquet(output_file, index=False)
+
+    print(protein_df.head())
+    print(f"\nSaved {len(protein_df)} protein variants -> {output_file}")
+
+
+if __name__ == "__main__":
+    main()
