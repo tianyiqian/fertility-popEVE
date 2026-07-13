@@ -1,5 +1,6 @@
 project:
   name: fertility_popEVE
+  version: 0.1.0
 
 paths:
   reference: /home/tian/ngs_project/ref/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna
@@ -18,6 +19,7 @@ paths:
   gp: data/gp
 
   logs: logs
+  output: output
 
 gatk:
   threads: 4
