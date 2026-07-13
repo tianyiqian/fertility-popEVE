@@ -31,3 +31,10 @@ vep:
 
 esm:
   model: esm1v
+
+files:
+  protein_mapping: data/reference/mapping/protein_mapping.parquet
+  mapping_cache: data/reference/cache/ensembl_mapping.json
+
+models:
+  popeve: models/popEVE/data

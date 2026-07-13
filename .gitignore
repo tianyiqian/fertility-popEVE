@@ -1,48 +1,63 @@
-# ==========================
 # Python
-# ==========================
 __pycache__/
 *.py[cod]
 *.so
-*.egg-info/
+
+# Virtual environments
+.venv/
+env/
+.env
+
+# Editors
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Logs
+logs/
+*.log
+output/
+
+# Temporary
+*.tmp
+*.bak
+
+# Python cache
 .pytest_cache/
 .mypy_cache/
 
-# ==========================
-# Virtual Environment
-# ==========================
-.venv/
-venv/
+# Data (generated)
+data/annotation/
+data/missense/
+data/protein/
+data/features/
+data/reference/cache/
+data/reference/mapping/
 
-# ==========================
-# IDE
-# ==========================
-.idea/
-.vscode/
+# Large model/data
+models/popeve_data/
+models/popEVE/data/
 
-# ==========================
-# Logs
-# ==========================
-logs/
-*.log
-
-# ==========================
-# Output
-# ==========================
-output/
-
-# ==========================
-# Data (不要把几百GB数据提交)
-# ==========================
-data/
-
-# ==========================
-# Models
-# ==========================
-models/
-
-# ==========================
 # OS
-# ==========================
 .DS_Store
-Thumbs.db
+
+# Generated index
+data/reference/popeve_index.parquet
+
+# Download archives
+*.tar.gz
+
+# ========= Runtime data =========
+data/joint_test/**
+data/raw_gvcf/**
+data/raw_gvcf_test/**
+
+# ========= Third-party source =========
+models/popEVE/**
+
+# ========= Official data =========
+models/popeve_data/**
+
+# Ignore all models for now
+models/**
