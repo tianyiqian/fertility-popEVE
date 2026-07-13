@@ -41,3 +41,9 @@ files:
 
 models:
   popeve: models/popEVE/data
+
+training:
+  vcf: data/joint_test/joint_chr22.vcf.gz
+  feature: data/features/feature_matrix.parquet
+  phenotype: data/phenotype/phenotype.csv
+  output: data/features/training_matrix.parquet
