@@ -73,3 +73,13 @@ data/fertility/
 
 data/gp/training/
 data/gp/training_test/
+
+# phenotype private data
+data/phenotype/
+
+# temporary scripts
+scripts/*.v1
+scripts/*.v2
+
+# local test data
+tests/test_phenotype.csv
