@@ -6,7 +6,7 @@ import pandas as pd
 class ExomiserExporter:
     """
     Export fertility-popEVE training matrix to a
-    geneBurdenRD-compatible master table.
+    geneBurdenRD-compatible master dataframe.
     """
 
     def __init__(self, assembly: str = "GRCh38"):
@@ -17,7 +17,7 @@ class ExomiserExporter:
         Build Variant column.
 
         Format:
-            chr:pos:ref:alt
+            chrom:pos:ref:alt
         """
         return (
             df["chrom"].astype(str)
@@ -35,6 +35,9 @@ class ExomiserExporter:
         """
         out = pd.DataFrame(index=df.index)
 
+        # Identity block
+        out["Sample ID"] = df["sample"]
+        out["Gene"] = df["gene"]
         out["Variant"] = self._build_variant(df)
 
         return out
