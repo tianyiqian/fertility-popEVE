@@ -6,14 +6,35 @@ import pandas as pd
 class ExomiserExporter:
     """
     Export fertility-popEVE training matrix to a
-    geneBurdenRD-compatible master TSV.
+    geneBurdenRD-compatible master table.
     """
 
     def __init__(self, assembly: str = "GRCh38"):
         self.assembly = assembly
 
+    def _build_variant(self, df: pd.DataFrame) -> pd.Series:
+        """
+        Build Variant column.
+
+        Format:
+            chr:pos:ref:alt
+        """
+        return (
+            df["chrom"].astype(str)
+            + ":"
+            + df["pos"].astype(str)
+            + ":"
+            + df["ref"].astype(str)
+            + ":"
+            + df["alt"].astype(str)
+        )
+
     def export(self, df: pd.DataFrame) -> pd.DataFrame:
         """
-        Convert training_matrix into a geneBurdenRD master table.
+        Export minimum geneBurdenRD master dataframe.
         """
-        raise NotImplementedError
+        out = pd.DataFrame(index=df.index)
+
+        out["Variant"] = self._build_variant(df)
+
+        return out
