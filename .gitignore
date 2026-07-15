@@ -68,3 +68,8 @@ data/phenotype/
 outputs/
 data/geneBurdenRD/
 data/fertility/
+
+# ========= GP generated data =========
+
+data/gp/training/
+data/gp/training_test/
