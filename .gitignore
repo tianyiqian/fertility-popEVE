@@ -63,9 +63,8 @@ models/popeve_data/**
 models/**
 data/phenotype/
 
-# Generated outputs
-outputs/
+# ========= Generated pipeline outputs =========
 
-# GeneBurdenRD generated files
+outputs/
 data/geneBurdenRD/
 data/fertility/
