@@ -2,30 +2,92 @@
 
 Last Updated: 2026-07-15
 
-## Current Version
+---
 
-v0.3
+# Current Version
+
+v0.5
 
 Latest Commit:
 
-77ba003 add config driven training pipeline
+f5b2a62 organize generated output ignores
 
 ---
 
-## Project Goal
+# Project Goal
 
-Adapt the Harvard popEVE framework for reproductive genetics, including:
+Adapt the Harvard popEVE framework for reproductive genetics.
+
+Target applications:
 
 - Infertility
 - Recurrent pregnancy loss
 - Embryo developmental arrest
 - Oocyte maturation disorders
 
-The long-term objective is to build a population-aware pathogenicity prediction framework for reproductive medicine.
+Long-term goal:
+
+Build a population-aware pathogenicity prediction framework for reproductive medicine.
 
 ---
 
-## Completed Modules
+# Current Architecture
+
+The project contains three major data layers.
+
+## Variant-level data
+
+Source:
+
+Joint multi-sample VCF
+
+Representation:
+
+sample × variant
+
+Current output:
+
+data/features/training_matrix.parquet
+
+Purpose:
+
+- popEVE feature modeling
+- GP training
+- downstream machine learning
+
+
+## Patient-level data
+
+Source:
+
+data/phenotype/phenotype.csv
+
+Representation:
+
+one row per patient/sample
+
+Purpose:
+
+- clinical phenotype definition
+- GeneBurdenRD case-control labels
+- future clinical modeling
+
+
+## Gene-level burden analysis
+
+Input:
+
+- Exomiser-compatible master TSV
+- phenotype labels
+
+Purpose:
+
+- gene burden testing
+- association analysis
+
+---
+
+# Completed Modules
 
 - [x] Configuration-driven pipeline
 - [x] VEP annotation
@@ -36,11 +98,16 @@ The long-term objective is to build a population-aware pathogenicity prediction 
 - [x] Feature matrix generation
 - [x] Genotype extraction
 - [x] Training matrix generation
+- [x] GeneBurdenRD master TSV export
+- [x] GeneBurdenRD phenotype label export
+- [x] Phenotype validation
 - [x] Unit tests
 
 ---
 
-## Current Pipeline
+# Current Pipeline
+
+## Variant pipeline
 
 VCF
 ↓
@@ -56,9 +123,33 @@ Feature Matrix
 ↓
 Training Matrix
 
+
+## GeneBurdenRD phenotype pipeline
+
+phenotype.csv
+↓
+Phenotype Exporter
+↓
+analysisLabelList.tsv
+EA.tsv
+NF.tsv
+GV.tsv
+MI.tsv
+
+
+## Gene burden pipeline
+
+Training matrix
+↓
+Exomiser master TSV
+↓
+GeneBurdenRD analysis
+
 ---
 
-## Current Outputs
+# Current Outputs
+
+## Feature outputs
 
 data/features/
 
@@ -66,30 +157,64 @@ data/features/
 - feature_matrix.parquet
 - training_matrix.parquet
 
+
+## GeneBurdenRD outputs
+
+Generated files:
+
+data/geneBurdenRD/
+
+- analysisLabelList.tsv
+- EA.tsv
+- NF.tsv
+- GV.tsv
+- MI.tsv
+
 ---
 
-## Next Milestone (v0.4)
+# Development Principles
 
-GeneBurdenRD integration
+1. Variant-level and patient-level data remain separated.
 
-Target outputs:
+2. phenotype.csv is the canonical patient metadata source.
 
-- gene_burden.parquet
-- merged_training_matrix.parquet
+3. Do not reconstruct patient phenotype from training_matrix.parquet.
+
+4. Business logic belongs under:
+
+fertility_popeve/
+
+5. CLI scripts remain thin wrappers.
+
+6. When information is uncertain:
+
+- verify data/code first
+- distinguish confirmed facts from inference
+- avoid assumptions
 
 ---
 
-## Future Roadmap
+# Next Milestone
 
-v0.4
-- Gene burden features
+## v0.6
 
-v0.5
-- Gaussian Process training
+Gaussian Process retraining.
+
+Goals:
+
+- adapt popEVE GP framework
+- define fertility-specific labels
+- construct GP training dataset
+
+---
+
+# Future Roadmap
 
 v0.6
+- Gaussian Process training
+
+v0.7
 - Fertility-specific model training
 
 v1.0
 - Complete fertility-popEVE pipeline
-
