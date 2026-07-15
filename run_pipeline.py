@@ -49,6 +49,7 @@ def run_training():
     df = build_training_matrix(
         cfg["vcf"],
         cfg["feature"],
+        cfg["variant"],
         cfg["phenotype"],
     )
 

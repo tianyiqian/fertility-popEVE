@@ -45,5 +45,6 @@ models:
 training:
   vcf: data/joint_test/joint_chr22.vcf.gz
   feature: data/features/feature_matrix.parquet
+  variant: data/annotation/variant_table.parquet
   phenotype: data/phenotype/phenotype.csv
   output: data/features/training_matrix.parquet

@@ -24,12 +24,19 @@ def test_training_matrix():
     df = build_training_matrix(
         "data/joint_test/joint_chr22.vcf.gz",
         "data/features/feature_matrix.parquet",
+        "data/annotation/variant_table.parquet",
         phenotype,
     )
 
     assert len(df) > 0
+
     assert "popEVE" in df.columns
     assert "phenotype" in df.columns
+
+    assert "consequence" in df.columns
+    assert "impact" in df.columns
+    assert "hgvsc" in df.columns
+    assert "hgvsp" in df.columns
 
 
 def test_save_training_matrix(tmp_path):
