@@ -1,0 +1,98 @@
+--- /home/tian/whri-phenogenomics-geneBurdenRD-f27f234/scripts/geneBurdenRD_prepare.R.bak	2026-07-15 10:40:02.188472723 +0800
++++ /home/tian/whri-phenogenomics-geneBurdenRD-f27f234/scripts/geneBurdenRD_prepare.R	2026-07-15 10:48:26.170619675 +0800
+@@ -6,7 +6,8 @@
+ args <- commandArgs(trailingOnly = TRUE)
+ 
+ # Load libraries ----
+-library("tidyverse")
++library(readr)
++library(dplyr)
+ library("data.table")
+ 
+ exomiserCandidatesFile <- args[1] # e.g. "data/exomiser_master_file_passvars.tsv"
+@@ -25,13 +26,13 @@
+ 
+ attr(exomiserCandidates, "problems")
+ 
+-str(exomiserCandidates)
++# str(exomiserCandidates)
+ 
+ # Make variable names and rename variables ====
+ colnames(exomiserCandidates)
+ (colnames(exomiserCandidates) <- make.names(tolower(colnames((exomiserCandidates)))))
+ 
+-glimpse(exomiserCandidates)
++# glimpse(exomiserCandidates)
+ 
+ # Check number of sample ids
+ # sample.id
+@@ -47,7 +48,7 @@
+ exomiserPass <- exomiserPass %>%
+   group_by(sample.id) %>%
+   mutate(counter = row_number())
+-summary(exomiserPass$counter)
++# summary(exomiserPass$counter)
+ 
+ exomiserPass <- exomiserPass %>%
+   ungroup()
+@@ -57,7 +58,7 @@
+          unique()
+ )
+ 
+-summary(exomiserPass$variant.score)
++# summary(exomiserPass$variant.score)
+ 
+ # Create unique.casegene.id from sample.id and gene ====
+ exomiserPass$unique.casegene.id <- paste(exomiserPass$sample.id, exomiserPass$gene, sep = "-")
+@@ -69,7 +70,7 @@
+   mutate(varcasegene.counter = row_number())
+ exomiserPass <- exomiserPass %>%
+   ungroup()  
+-table(exomiserPass$varcasegene.counter)
++# table(exomiserPass$varcasegene.counter)
+ 
+ # Create vartype from functional.class ==== 
+ # as presence of:
+@@ -163,7 +164,7 @@
+ }
+ 
+ # # Check totals 
+-table(exomiserPass$varcasegene.counter)
++# table(exomiserPass$varcasegene.counter)
+ dim(exomiserPassWide) 
+ 
+ # Create new variables in the wide form (per row)
+@@ -191,8 +192,8 @@
+ exomiserPassWide$max.vartype <- ifelse(is.na(exomiserPassWide$max.vartype) == TRUE & (grepl('other', exomiserPassWide$vartype_1) | grepl('other', exomiserPassWide$vartype_2)), 'other', exomiserPassWide$max.vartype)
+ 
+ sum(is.na(exomiserPassWide$max.vartype))
+-print("Print vartype table")
+-table(exomiserPassWide$max.vartype)
++# print("Print vartype table")
++# table(exomiserPassWide$max.vartype)
+ 
+ exomiserPassWide$vartype_1 <- NULL
+ exomiserPassWide$vartype_2 <- NULL
+@@ -202,8 +203,8 @@
+ exomiserPassWide$ccr.test_2 <- ifelse((exomiserPassWide$ccr.flag_2 == 1 & exomiserPassWide$variant.score_2 >= 0.80), 1, 0)
+ 
+ exomiserPassWide$max.ccr <- pmax(exomiserPassWide$ccr.test_1, exomiserPassWide$ccr.test_2, na.rm = TRUE)
+-print("Print ccr table")
+-table(exomiserPassWide$max.ccr)
++# print("Print ccr table")
++# table(exomiserPassWide$max.ccr)
+ 
+ exomiserPassWide$ccr.flag_1 <- NULL
+ exomiserPassWide$ccr.flag_2 <- NULL
+@@ -237,8 +238,10 @@
+ # Output wide_to_output file ---- 
+ # This file is used to run the gene-burden testing 
+ colnames(exomiserPassWideToOutput)
++message("[INFO] Writing PassWide TSV...")
++
+ write_tsv(exomiserPassWideToOutput, args[2])
+-print("Output PassWide.tsv file: completed")
++message(sprintf("[INFO] Output written to: %s", args[2]))
+ 
+ rm(list = ls())
+ 

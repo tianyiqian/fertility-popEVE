@@ -5,11 +5,38 @@ from pathlib import Path
 import pandas as pd
 
 
+MASTER_COLUMNS = [
+    "Sample ID",
+    "Gene",
+    "Variant",
+    "Genotypes",
+    "ExomiserMOI",
+    "Functional Class",
+    "Max Freq",
+    "GnomAD Freq",
+    "De novo",
+    "Rank",
+    "Score",
+    "Variant Score",
+    "Pheno Score",
+    "Human Pheno Score",
+    "Best Evidence",
+    "Human Evidence",
+    "Mouse Evidence",
+    "Fish Evidence",
+    "Human PPI Evidence",
+    "HGVS",
+    "Assembly",
+    "Fam Structure",
+    "HPO IDs",
+    "HPO terms",
+    "Exomiser result count",
+    "Freq in Exomiser result",
+    "CCR Flag",
+]
+
+
 class ExomiserExporter:
-    """
-    Export fertility-popEVE training matrix to a
-    geneBurdenRD-compatible master dataframe.
-    """
 
     def __init__(self, assembly: str = "GRCh38"):
         self.assembly = assembly
@@ -26,25 +53,33 @@ class ExomiserExporter:
         )
 
     def export(self, df: pd.DataFrame) -> pd.DataFrame:
+
         out = pd.DataFrame(index=df.index)
+
+        for c in MASTER_COLUMNS:
+            out[c] = pd.NA
 
         out["Sample ID"] = df["sample"]
         out["Gene"] = df["gene"]
         out["Variant"] = self._build_variant(df)
         out["Genotypes"] = df["gt"]
+
+        out["Functional Class"] = df["consequence"]
+
+        out["Score"] = df["popEVE"]
+        out["Variant Score"] = df["popEVE"]
+
+        out["HGVS"] = df["hgvsp"]
+
         out["Assembly"] = self.assembly
 
-        return out
+        return out[MASTER_COLUMNS]
 
-    def save(self, df: pd.DataFrame, output: str | Path) -> Path:
-        """
-        Export dataframe and save as TSV.
-        """
+    def save(self, df: pd.DataFrame, output: str | Path):
+
         output = Path(output)
 
-        out = self.export(df)
-
-        out.to_csv(
+        self.export(df).to_csv(
             output,
             sep="\t",
             index=False,
