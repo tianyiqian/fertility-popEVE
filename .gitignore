@@ -62,3 +62,10 @@ models/popeve_data/**
 # Ignore all models for now
 models/**
 data/phenotype/
+
+# Generated outputs
+outputs/
+
+# GeneBurdenRD generated files
+data/geneBurdenRD/
+data/fertility/
