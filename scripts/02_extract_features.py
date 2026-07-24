@@ -1,3 +1,4 @@
+import gzip
 from pathlib import Path
 import pandas as pd
 
@@ -12,14 +13,16 @@ from fertility_popeve.utils.config import load_config
 def main():
     config = load_config()
 
-    vcf = Path(config["paths"]["annotation"]) / "joint_chr22.vep.vcf"
+    vcf = Path(config["paths"]["annotation"]) / "cohort_joint.vep.vcf.gz"
     out = Path(config["paths"]["annotation"]) / "variant_table.parquet"
 
+    print(f"Reading: {vcf}")
     fields = get_csq_fields(vcf)
 
     rows = []
 
-    with open(vcf) as f:
+    opener = gzip.open if vcf.suffix == ".gz" else open
+    with opener(vcf, "rt") as f:
         for line in f:
             if line.startswith("#"):
                 continue
