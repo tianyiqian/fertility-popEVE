@@ -95,21 +95,27 @@ def train_protein_gp(
     best_state = None
     stall_count = 0
 
-    model.train(); likelihood.train()
+    model.train()
+    likelihood.train()
     for epoch in range(epochs):
-        variational.zero_grad(); hyperparameters.zero_grad()
+        variational.zero_grad()
+        hyperparameters.zero_grad()
         loss = -objective(model(train_x), train_y)
-        loss.backward(); variational.step(); hyperparameters.step()
+        loss.backward()
+        variational.step()
+        hyperparameters.step()
         loss_val = float(loss.detach().cpu())
         lengthscale_val = float(model.covar_module.base_kernel.lengthscale.detach().cpu())
 
         val_loss = None
         if val_x is not None:
-            model.eval(); likelihood.eval()
+            model.eval()
+            likelihood.eval()
             with torch.no_grad():
                 val_loss = -objective(model(val_x), val_y)
                 val_loss = float(val_loss.detach().cpu())
-            model.train(); likelihood.train()
+            model.train()
+            likelihood.train()
 
         history.append({
             "epoch": epoch + 1,
@@ -141,7 +147,8 @@ def train_protein_gp(
             "score_max": score_max,
         }
 
-    model.eval(); likelihood.eval()
+    model.eval()
+    likelihood.eval()
     all_x = torch.tensor(normalised[:, None], device=device)
     with torch.no_grad(), gpytorch.settings.fast_pred_var():
         posterior = model(all_x)

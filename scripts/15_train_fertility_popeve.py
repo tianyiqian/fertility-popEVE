@@ -5,12 +5,12 @@ import sys
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
-import torch
-from fertility_popeve.gp.trainer import (
+import torch  # noqa: E402
+from fertility_popeve.gp.trainer import (  # noqa: E402
     train_eligible_proteins,
     train_eligible_proteins_multi_gpu,
 )
-from fertility_popeve.utils.config import load_config
+from fertility_popeve.utils.config import load_config  # noqa: E402
 
 
 def main():

@@ -7,8 +7,8 @@ import sys
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from fertility_popeve.gp.builder import build_gp_training_files
-from fertility_popeve.utils.config import load_config
+from fertility_popeve.gp.builder import build_gp_training_files  # noqa: E402
+from fertility_popeve.utils.config import load_config  # noqa: E402
 
 
 def main():

@@ -6,7 +6,7 @@ import sys
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from fertility_popeve.burden.phenotype_exporter import (
+from fertility_popeve.burden.phenotype_exporter import (  # noqa: E402
     export_all,
 )
 

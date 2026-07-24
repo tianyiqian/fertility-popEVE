@@ -27,55 +27,9 @@ output/
 .pytest_cache/
 .mypy_cache/
 
-# Data (generated)
-data/annotation/
-data/missense/
-data/protein/
-data/features/
-data/reference/cache/
-data/reference/mapping/
-
-# Large model/data
-models/popeve_data/
-models/popEVE/data/
-
-# OS
-.DS_Store
-
-# Generated index
-data/reference/popeve_index.parquet
-
-# Download archives
-*.tar.gz
-
-# ========= Runtime data =========
-data/joint_test/**
-data/raw_gvcf/**
-data/raw_gvcf_test/**
-
-# ========= Third-party source =========
-models/popEVE/**
-
-# ========= Official data =========
-models/popeve_data/**
-
-# Ignore all models for now
-models/**
-data/phenotype/
-
-# ========= Generated pipeline outputs =========
-
+data/
+models/
 outputs/
-data/geneBurdenRD/
-data/fertility/
-
-# ========= GP generated data =========
-
-data/gp/training/
-data/gp/training_test/
-
-# phenotype private data
-data/phenotype/
 
 # temporary scripts
 scripts/*.v1
