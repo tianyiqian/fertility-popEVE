@@ -8,3 +8,10 @@ steps:
   - scripts.07_build_foundation_features
   - scripts.08_build_feature_matrix
   - scripts.09_validate_feature_matrix
+  - scripts.10_export_analysis_labels
+  - scripts.11_build_gp_training
+  - scripts.12_prepare_phenotype
+  - scripts.13_build_vcf_mapping
+  - scripts.14_build_gp_candidate_space
+  - scripts.15_train_fertility_popeve
+  - scripts.16_prepare_full_cohort

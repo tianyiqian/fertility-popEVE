@@ -1,45 +1,55 @@
 # fertility-popEVE
 
-A population-aware evolutionary model for reproductive genomics.
+Population-aware evolutionary model for reproductive genomics — adapts the
+[popEVE](https://github.com/debbiemarkslab/popEVE) framework (Marks Lab,
+Harvard) to reproductive medicine.
 
-fertility-popEVE adapts the popEVE framework to reproductive medicine by integrating population-aware evolutionary scores, protein foundation models, clinical phenotype labels, gene burden analysis and Gaussian Process calibration for infertility-related genomic analysis.
+**Paper reference**: Orenbuch et al. "Deep generative modeling of the human
+proteome reveals over a hundred novel genes involved in rare genetic
+disorders." medRxiv, 2023.
 
-## Project Status
+## Status
 
-Current version: v0.7
+Current version: **v0.8.1**
 
-fertility-popEVE has completed the full feature extraction pipeline, phenotype integration, gene burden analysis, GP training pipeline, and real cohort preparation.
+The data pipeline (VEP → feature matrix) and Gaussian Process training are
+functional.  The module list below distinguishes what is implemented from
+what is planned.
 
-Completed modules:
+## What Works
 
-- VCF processing pipeline ✅
-- VEP annotation pipeline ✅
-- Missense variant filtering ✅
-- Protein sequence preparation ✅
-- Protein ID mapping ✅
-- popEVE feature extraction ✅
-- EVE / ESM1v feature integration ✅
-- Variant feature matrix construction ✅
-- Reproductive phenotype integration ✅
-- Sample ID and proband gVCF mapping ✅
-- Gene burden analysis ✅
-- Exomiser master export ✅
-- GP training data builder ✅
-- GP candidate space construction ✅
-- GP model training ✅
-- Memory watchdog daemon ✅
-- Full-cohort preparation pipeline ✅
-- Pipeline orchestration & checkpointing ✅
+| Component | Status |
+|-----------|--------|
+| VCF processing pipeline | Done |
+| VEP annotation | Done |
+| Missense variant filtering | Done |
+| Protein sequence preparation | Done |
+| Protein ID mapping (Ensembl → RefSeq) | Done |
+| popEVE feature extraction (VCF tabix query) | Done |
+| Variant feature matrix construction | Done |
+| Reproductive phenotype integration | Done |
+| Proband gVCF mapping | Done |
+| Gene burden analysis (GeneBurdenRD export) | Done |
+| GP training data builder | Done |
+| GP candidate space construction | Done |
+| GP model training (per-protein, EVE+ESM1v ensemble) | Done |
+| Memory watchdog daemon | Done |
+| Pipeline orchestration & checkpointing | Done |
 
-Current development:
+## In Progress / Planned
 
-- Large-scale real cohort joint calling 🚧
-- Fertility-specific model evaluation & tuning 🚧
-- Clinical phenotype analysis 🚧
+| Component | Status |
+|-----------|--------|
+| EVE model inference (local) | Planned — currently reads precomputed scores |
+| Protein embedding layer | Planned |
+| Full-cohort joint calling at scale | In progress |
+| Fertility-specific model evaluation & benchmarking | In progress |
+| Clinical phenotype association analysis | In progress |
+| Web interface / API | Not started |
 
-## Pipeline Overview
+## Pipeline
 
-The pipeline is orchestrated via `run_pipeline.py` with step definitions in `config/pipeline.yaml`. Steps:
+The pipeline has 16 steps orchestrated via `config/pipeline.yaml`:
 
 | Step | Script | Description |
 |------|--------|-------------|
@@ -60,7 +70,44 @@ The pipeline is orchestrated via `run_pipeline.py` with step definitions in `con
 | 15 | `15_train_fertility_popeve.py` | GP model training |
 | 16 | `16_prepare_full_cohort.py` | Full cohort preparation |
 
-Memory watchdog (`scripts/00_watchdog.py`) automatically monitors and kills heavy subprocesses when available memory drops below 200 GB.
+Memory watchdog (`scripts/00_watchdog.py`) monitors system memory during
+training and terminates subprocesses when available RAM drops below the
+configured danger threshold.
+
+## Quick Start
+
+```bash
+# 1. Create conda environments
+conda env create -f environment/fertility_popeve.yml
+conda env create -f environment/fertility_gp.yml
+
+# 2. Run full pipeline
+python run_pipeline.py
+
+# 3. GP training (separate env for torch/gpytorch)
+conda run -n fertility_gp python scripts/15_train_fertility_popeve.py
+```
+
+## Configuration
+
+Edit `config/config.yaml` to set paths and thresholds.  Key sections:
+
+- `paths` — data directories, reference genome, BED files
+- `gp_training` — epochs, admission criteria, checkpoint intervals
+- `memory` — watchdog thresholds
+
+## GP Training Alignment
+
+The GP trainer is aligned with the official
+[debbiemarkslab/popEVE](https://github.com/debbiemarkslab/popEVE) training
+methodology:
+
+- Per-protein GP calibration using Pólya-Gamma likelihood
+- RBF kernel with Natural Variational Distribution
+- 6,000 training epochs with checkpoints every 1,000
+- Output directories: `states/`, `scores/`, `losses_and_lengthscales/`
+- Ensemble scoring: EVE + ESM1v posterior means averaged
+- Multi-GPU parallel training via subprocess pool
 
 ## Project Structure
 
@@ -69,17 +116,14 @@ fertility_popEVE/
 ├── fertility_popeve/         # Core library
 │   ├── annotation/           # VEP annotation & feature extraction
 │   ├── burden/               # Gene burden analysis & phenotype export
-│   ├── embedding/            # Embedding layer
-│   ├── eve/                  # EVE model interface
-│   ├── features/             # Feature merge, training, popEVE
-│   ├── gp/                   # Gaussian Process (builder, model, trainer)
-│   ├── pipeline/             # Pipeline orchestration
-│   ├── providers/            # popEVE data provider
-│   ├── reference/            # Reference DB, ID mapping, cache
-│   ├── utils/                # Config, logging, memory, checkpoint, shell
-│   └── validation/           # Validation utilities
-├── scripts/                  # Pipeline step scripts (00-16)
-├── tests/                    # Unit & integration tests
+│   ├── features/             # Feature merge, training, popEVE queries
+│   ├── gp/                   # Gaussian Process (model, trainer, builder, candidates)
+│   ├── reference/            # Reference database
+│   ├── utils/                # Config, logging, memory
+│   ├── variant/              # Variant records, protein parsing, genotypes
+│   └── providers/            # Data provider stubs
+├── scripts/                  # Pipeline step scripts (00–16)
+├── tests/                    # Unit & integration tests (57 tests)
 ├── config/                   # YAML configs (pipeline, model, cohort)
 ├── environment/              # Conda environment files
 ├── data/                     # Runtime data (gitignored)
@@ -87,3 +131,13 @@ fertility_popEVE/
 ├── outputs/                  # Pipeline outputs (gitignored)
 └── run_pipeline.py           # Main pipeline runner
 ```
+
+## Target Applications
+
+Infertility · Recurrent pregnancy loss · Embryo developmental arrest ·
+Oocyte maturation disorders
+
+## License
+
+MIT — see [upstream](https://github.com/debbiemarkslab/popEVE) for popEVE's
+original license.

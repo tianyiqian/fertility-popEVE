@@ -101,16 +101,6 @@ def main():
 
         return
 
-    if output_table.exists():
-
-        print("Existing mapping found, loading cache")
-
-        mapping = pd.read_parquet(output_table)
-
-        print(f"Loaded {len(mapping)} mappings")
-
-        return
-
     records = []
 
     success = 0

@@ -406,6 +406,9 @@ def _train_gp_subprocess(
     """Run ``train_protein_gp`` in a subprocess pinned to one GPU."""
     csv_path = Path(csv_path).resolve()
     output_dir = Path(output_dir).resolve()
+
+    project_root = Path(__file__).resolve().parents[2]
+
     mem_preamble = ""
     if mem_limit_gb:
         limit_bytes = int(mem_limit_gb * 1024 ** 3)
@@ -414,11 +417,11 @@ def _train_gp_subprocess(
             f"resource.setrlimit(resource.RLIMIT_AS, ({limit_bytes}, {limit_bytes})); "
         )
     script = (
-        f"import sys; sys.path.insert(0, '{csv_path.parent.parent.parent}'); "
+        f"import sys; sys.path.insert(0, {project_root!r}); "
         f"{mem_preamble}"
         f"from fertility_popeve.gp.trainer import train_protein_gp; "
         f"train_protein_gp("
-        f"r'{csv_path}', r'{output_dir}', "
+        f"{str(csv_path)!r}, {str(output_dir)!r}, "
         f"epochs={epochs}, training_frac={training_frac}, "
         f"seed={seed}, checkpoint_every={checkpoint_every}, "
         f"convergence_patience={convergence_patience})"

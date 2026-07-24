@@ -158,36 +158,33 @@ def launch_watchdog(
     log_file: str = "logs/watchdog.log",
 ):
     project_root = Path(__file__).resolve().parents[2]
-    script = f"""
-import os, sys, signal, time
-sys.path.insert(0, '{project_root}')
-from fertility_popeve.utils.memory import available_memory_gb, kill_heaviest_processes
-
-log = open('{log_file}', 'a')
-def log_msg(msg):
-    ts = time.strftime('%Y-%m-%d %H:%M:%S')
-    line = f"[{{ts}}] {{msg}}"
-    print(line, flush=True)
-    log.write(line + '\\n')
-    log.flush()
-
-log_msg(f"Watchdog started. parent={parent_pid}, threshold={danger_threshold_gb} GB, interval={interval_sec} s")
-
-while True:
-    time.sleep({interval_sec})
-    if not __import__('pathlib').Path(f'/proc/{parent_pid}').exists():
-        log_msg("Parent PID {parent_pid} no longer exists. Exiting.")
-        break
-    avail = available_memory_gb()
-    if avail >= {danger_threshold_gb}:
-        continue
-    log_msg(f"DANGER: {{avail:.1f}} GB available (threshold={danger_threshold_gb} GB). Killing subprocesses...")
-    freed = kill_heaviest_processes({parent_pid}, max_gb_to_free=100, logger=log_msg)
-    if freed > 0:
-        log_msg(f"Freed {{freed:.1f}} GB, now {{available_memory_gb():.1f}} GB available")
-    else:
-        log_msg(f"No child processes to kill. Still {{avail:.1f}} GB available.")
-"""
+    script = (
+        f"import os, sys, signal, time\n"
+        f"sys.path.insert(0, {project_root!r})\n"
+        f"from fertility_popeve.utils.memory import available_memory_gb, kill_heaviest_processes\n\n"
+        f"log = open({log_file!r}, 'a')\n"
+        f"def log_msg(msg):\n"
+        f"    ts = time.strftime('%Y-%m-%d %H:%M:%S')\n"
+        f"    line = f'[{{ts}}] {{msg}}'\n"
+        f"    print(line, flush=True)\n"
+        f"    log.write(line + '\\n')\n"
+        f"    log.flush()\n\n"
+        f"log_msg(f'Watchdog started. parent={parent_pid}, threshold={danger_threshold_gb} GB, interval={interval_sec} s')\n\n"
+        f"while True:\n"
+        f"    time.sleep({interval_sec})\n"
+        f"    if not __import__('pathlib').Path(f'/proc/{parent_pid}').exists():\n"
+        f"        log_msg('Parent PID {parent_pid} no longer exists. Exiting.')\n"
+        f"        break\n"
+        f"    avail = available_memory_gb()\n"
+        f"    if avail >= {danger_threshold_gb}:\n"
+        f"        continue\n"
+        f"    log_msg(f'DANGER: {{avail:.1f}} GB available (threshold={danger_threshold_gb} GB). Killing subprocesses...')\n"
+        f"    freed = kill_heaviest_processes({parent_pid}, max_gb_to_free=100, logger=log_msg)\n"
+        f"    if freed > 0:\n"
+        f"        log_msg(f'Freed {{freed:.1f}} GB, now {{available_memory_gb():.1f}} GB available')\n"
+        f"    else:\n"
+        f"        log_msg(f'No child processes to kill. Still {{avail:.1f}} GB available.')\n"
+    )
     env = dict(os.environ)
     env["PYTHONPATH"] = str(project_root)
     return subprocess.Popen(
