@@ -5,7 +5,6 @@ from pathlib import Path
 import pandas as pd
 
 
-VCF_ROOT = Path("/data/pgdv/output/vcf_2026")
 PHENOTYPE = Path("data/phenotype/phenotype.csv")
 EXISTING_PROBAND_MAP = Path("data/phenotype/proband_vcf_mapping.csv")
 OUT_DIR = Path("data/cohort")

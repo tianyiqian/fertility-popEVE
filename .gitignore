@@ -37,3 +37,7 @@ scripts/*.v2
 
 # local test data
 tests/test_phenotype.csv
+
+# opencode
+.opencode/
+opencode.json

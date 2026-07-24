@@ -1,13 +1,19 @@
 #!/usr/bin/env python3
 
+import os
+import sys
 from pathlib import Path
 import pandas as pd
 import re
 
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(PROJECT_ROOT))
 
-VCF_ROOT = Path(
-    "/data/pgdv/output/vcf_2026"
-)
+from fertility_popeve.utils.config import load_config  # noqa: E402
+
+
+_config = load_config()
+VCF_ROOT = Path(os.environ.get("GVCF_ROOT", _config["paths"].get("raw_gvcf", "data/raw_gvcf")))
 
 PHENO = Path(
     "data/phenotype/phenotype.csv"
