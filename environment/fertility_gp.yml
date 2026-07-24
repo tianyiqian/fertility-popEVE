@@ -1,0 +1,11 @@
+name: fertility_gp
+channels:
+  - conda-forge
+  - pytorch
+dependencies:
+  - python=3.10
+  - pandas
+  - pyarrow
+  - pytorch
+  - gpytorch
+  - pytest

@@ -9,12 +9,12 @@ paths:
   raw_gvcf_test: data/raw_gvcf_test
   joint_test: data/joint_test
   joint_vcf: data/joint_vcf
-  annotation: data/joint_test_real/annotation
-  missense: data/joint_test_real/missense
-  protein: data/joint_test_real/protein
-  features: data/joint_test_real/features
+  annotation: data/annotation
+  missense: data/missense
+  protein: data/protein
+  features: data/features
   embedding: data/embedding
-  gp: data/joint_test_real/gp
+  gp: data/gp
   reference_data: data/reference
   logs: logs
   outputs: outputs
@@ -40,11 +40,11 @@ models:
   popeve_vcf: models/popeve_data/grch38_popEVE_ukbb_20250715.vcf.gz
 
 training:
-  vcf: data/joint_test_real/cohort_30.vcf.gz
+  vcf: data/joint_vcf/cohort_joint.vcf.gz
   feature: data/features/feature_matrix.parquet
   variant: data/annotation/variant_table.parquet
   phenotype: data/phenotype/phenotype.csv
-  output: data/joint_test_real/features/training_matrix.parquet
+  output: data/features/training_matrix.parquet
 
 gp_training:
   epochs: 6000

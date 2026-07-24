@@ -1,9 +1,11 @@
-def get_csq_fields(vcf_file):
-    """
-    Read CSQ field names from a VEP-annotated VCF.
-    """
+import gzip
+from pathlib import Path
 
-    with open(vcf_file) as f:
+
+def get_csq_fields(vcf_file):
+    vcf_path = Path(vcf_file)
+    opener = gzip.open if vcf_path.suffix == ".gz" else open
+    with opener(vcf_path, "rt") as f:
         for line in f:
             if line.startswith("##INFO=<ID=CSQ"):
                 prefix = "Format: "
