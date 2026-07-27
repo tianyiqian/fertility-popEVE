@@ -1,0 +1,70 @@
+project:
+  name: fertility_popEVE
+  version: 0.1.0
+
+paths:
+  reference: ${FPEVE_REFERENCE:/home/tian/ngs_project/ref/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna}
+  bed: ${FPEVE_BED:/home/tian/ngs_project/bed/exons.bed}
+  raw_gvcf: ${FPEVE_RAW_GVCF:data/raw_gvcf}
+  raw_gvcf_test: ${FPEVE_RAW_GVCF_TEST:data/raw_gvcf_test}
+  joint_test: ${FPEVE_JOINT_TEST:data/joint_test}
+  joint_vcf: ${FPEVE_JOINT_VCF:data/joint_vcf}
+  annotation: ${FPEVE_ANNOTATION:/data/fertility_100_proband/annotation}
+  missense: ${FPEVE_MISSENSE:/data/fertility_100_proband/missense}
+  protein: ${FPEVE_PROTEIN:/data/fertility_100_proband/protein}
+  features: ${FPEVE_FEATURES:/data/fertility_100_proband/features}
+  embedding: ${FPEVE_EMBEDDING:data/embedding}
+  gp: ${FPEVE_GP:/data/fertility_100_proband/gp}
+  reference_data: ${FPEVE_REFERENCE_DATA:data/reference}
+  logs: ${FPEVE_LOGS:logs}
+  outputs: ${FPEVE_OUTPUTS:outputs}
+
+gatk:
+  threads: 4
+
+vep:
+  cache: ~/.vep
+  assembly: GRCh38
+  fork: 4
+  buffer_size: 50000
+
+esm:
+  model: esm1v
+
+files:
+  protein_mapping: data/reference/mapping/protein_mapping.parquet
+  mapping_cache: data/reference/cache/ensembl_mapping.json
+
+models:
+  popeve: models/popEVE/data
+  popeve_vcf: models/popeve_data/grch38_popEVE_ukbb_20250715.vcf.gz
+
+training:
+  vcf: ${FPEVE_TRAINING_VCF:/data/fertility_100_proband/cohort_100.vcf.gz}
+  feature: ${FPEVE_TRAINING_FEATURE:/data/fertility_100_proband/features/feature_matrix.parquet}
+  variant: ${FPEVE_TRAINING_VARIANT:/data/fertility_100_proband/annotation/variant_table.parquet}
+  phenotype: ${FPEVE_TRAINING_PHENOTYPE:data/phenotype/phenotype.csv}
+  output: ${FPEVE_TRAINING_OUTPUT:/data/fertility_100_proband/features/training_matrix.parquet}
+
+gp_training:
+  epochs: 6000
+  min_candidates: 100
+  min_observed_variants: 10
+  training_frac: 1.0
+  checkpoint_every: 1000
+  convergence_patience: 0
+  convergence_threshold: 0.0001
+  inducing_points: 20
+  lr_ngd: 0.1
+  lr_adam: 0.05
+  lengthscale_init: 0.2
+  score_columns:
+    - EVE
+    - ESM1v
+
+memory:
+  total_gb: 2321
+  safe_threshold_gb: 1100
+  danger_threshold_gb: 1100
+  watchdog_interval_sec: 15
+  per_subprocess_limit_gb: 32

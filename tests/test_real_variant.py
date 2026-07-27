@@ -1,9 +1,14 @@
+from pathlib import Path
+
 import pandas as pd
+import pytest
 
 from fertility_popeve.variant.record import VariantRecord
 
 
 def test_real_variant():
+    if not Path("data/features/feature_matrix.parquet").exists():
+        pytest.skip("Test data not available (data/features/feature_matrix.parquet)")
 
     df = pd.read_parquet(
         "data/features/feature_matrix.parquet"

@@ -1,6 +1,5 @@
 import re
 
-
 AA3_TO_1 = {
     "Ala": "A", "Arg": "R", "Asn": "N", "Asp": "D",
     "Cys": "C", "Gln": "Q", "Glu": "E", "Gly": "G",

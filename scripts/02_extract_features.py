@@ -1,11 +1,12 @@
 import gzip
 from pathlib import Path
+
 import pandas as pd
 
 from fertility_popeve.annotation.extractor import (
+    extract_feature,
     get_csq_fields,
     parse_csq,
-    extract_feature,
 )
 from fertility_popeve.utils.config import load_config
 

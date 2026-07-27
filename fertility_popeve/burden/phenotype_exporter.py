@@ -4,7 +4,6 @@ from pathlib import Path
 
 import pandas as pd
 
-
 ANALYSES = [
     ("EA", "Embryo Arrest"),
     ("NF", "Fertilization Failure"),

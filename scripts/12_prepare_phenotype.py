@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 from pathlib import Path
-import pandas as pd
 
+import pandas as pd
 
 RAW_DIR = Path("data/phenotype/raw")
 OUT_DIR = Path("data/phenotype")

@@ -6,7 +6,6 @@ from pathlib import Path
 
 import pandas as pd
 
-
 MUTANT_PATTERN = re.compile(r"^([A-Z*])(\d+)([A-Z*])$")
 SCORE_COLUMNS = {"EVE", "ESM1v"}
 

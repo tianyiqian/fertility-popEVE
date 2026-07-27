@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
-from pathlib import Path
 import sys
-
+from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
@@ -21,7 +20,8 @@ def main():
         output_dir,
         score_columns=["eve_score", "esm1v_score"],
         observed_column="cohort_observed",
-        min_observed_for_training=10,
+        min_variants_for_training=20,
+        min_observed_for_training=3,
     )
 
     print(f"[INFO] Generated {len(outputs)} protein files")

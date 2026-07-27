@@ -17,7 +17,6 @@ import requests
 
 from fertility_popeve.utils.config import load_config
 
-
 HEADERS = {
     "Content-Type": "application/json",
     "Accept": "application/json",

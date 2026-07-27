@@ -1,9 +1,19 @@
+from pathlib import Path
+
 import pandas as pd
+import pytest
 
 from fertility_popeve.features.training import build_training_matrix
 
 
 def test_training_matrix():
+    required = [
+        "data/joint_test/joint_chr22.vcf.gz",
+        "data/features/feature_matrix.parquet",
+        "data/annotation/variant_table.parquet",
+    ]
+    if not all(Path(f).exists() for f in required):
+        pytest.skip("Test data not available: " + ", ".join(required))
 
     phenotype = "tests/test_phenotype.csv"
 

@@ -30,8 +30,8 @@ sys.path.insert(0, str(PROJECT_ROOT))
 from fertility_popeve.utils.memory import (  # noqa: E402
     available_memory_gb,
     kill_heaviest_processes,
-    used_memory_gb,
     total_memory_gb,
+    used_memory_gb,
 )
 
 

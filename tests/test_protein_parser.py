@@ -1,4 +1,5 @@
 import pytest
+
 from fertility_popeve.variant.protein_parser import parse_hgvsp
 
 

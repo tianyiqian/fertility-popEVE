@@ -11,21 +11,17 @@ import yaml
 PROJECT_ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
+from fertility_popeve.utils.config import load_config  # noqa: E402
 from fertility_popeve.utils.memory import (  # noqa: E402
     available_memory_gb,
-    wait_for_memory,
     launch_watchdog,
+    wait_for_memory,
 )
 
 
 def load_pipeline():
     with open("config/pipeline.yaml", "r") as f:
         return yaml.safe_load(f)["steps"]
-
-
-def load_config():
-    with open("config/config.yaml", "r") as f:
-        return yaml.safe_load(f)
 
 
 def run_step(module, mem_cfg=None):

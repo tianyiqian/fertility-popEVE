@@ -41,3 +41,7 @@ tests/test_phenotype.csv
 # opencode
 .opencode/
 opencode.json
+
+# runtime config (copy config.example.yaml → config.yaml to deploy)
+config/config.yaml
+config/config.yaml.bak*

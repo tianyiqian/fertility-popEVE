@@ -2,8 +2,8 @@
 """Create an auditable, exact-match gVCF manifest for the fertility cohort."""
 
 from pathlib import Path
-import pandas as pd
 
+import pandas as pd
 
 PHENOTYPE = Path("data/phenotype/phenotype.csv")
 EXISTING_PROBAND_MAP = Path("data/phenotype/proband_vcf_mapping.csv")

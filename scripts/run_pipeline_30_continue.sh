@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
-cd /home/tian/fertility_popEVE
+SCRIPT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$SCRIPT_DIR"
 
 LOG="logs/pipeline_30_$(date +%Y%m%d_%H%M%S).log"
 exec > >(tee "$LOG") 2>&1
 
-export PYTHONPATH=/home/tian/fertility_popEVE
+export PYTHONPATH="$SCRIPT_DIR"
 
 fail() {
     echo "[FATAL] $*"

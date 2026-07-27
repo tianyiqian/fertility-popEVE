@@ -1,0 +1,59 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  popeve:
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        shell: bash -el {0}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          python-version: "3.10"
+          auto-update-conda: true
+
+      - name: Install popeve dependencies
+        run: |
+          conda install -c conda-forge pyyaml pandas pyarrow pytest numpy -y
+
+      - name: Run data-independent tests (popeve env)
+        run: |
+          pytest tests/ -v \
+            --ignore=tests/test_genotype.py \
+            --ignore=tests/test_real_variant.py \
+            --ignore=tests/test_training.py \
+            --ignore=tests/test_gp_model.py \
+            --ignore=tests/test_gp_trainer.py \
+            --ignore=tests/test_gp_builder.py \
+            --ignore=tests/test_candidate_space.py
+
+  gp:
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        shell: bash -el {0}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          python-version: "3.10"
+          auto-update-conda: true
+
+      - name: Install GP dependencies
+        run: |
+          conda install -c conda-forge pyyaml pandas pyarrow pytest numpy -y
+          conda install -c pytorch pytorch gpytorch -y
+
+      - name: Run GP tests
+        run: |
+          pytest tests/test_gp_model.py tests/test_gp_trainer.py \
+            tests/test_gp_builder.py tests/test_candidate_space.py -v

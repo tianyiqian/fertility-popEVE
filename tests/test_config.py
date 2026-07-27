@@ -1,4 +1,3 @@
-import pytest
 from fertility_popeve.utils.config import load_config
 
 

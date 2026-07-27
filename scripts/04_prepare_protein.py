@@ -1,4 +1,5 @@
 from pathlib import Path
+
 import pandas as pd
 
 from fertility_popeve.utils.config import load_config

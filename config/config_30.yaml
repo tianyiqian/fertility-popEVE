@@ -3,8 +3,8 @@ project:
   version: 0.1.0
 
 paths:
-  reference: /home/tian/ngs_project/ref/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna
-  bed: /home/tian/ngs_project/bed/exons.bed
+  reference: ${FPEVE_REFERENCE:/home/tian/ngs_project/ref/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna}
+  bed: ${FPEVE_BED:/home/tian/ngs_project/bed/exons.bed}
   raw_gvcf: data/raw_gvcf
   raw_gvcf_test: data/raw_gvcf_test
   joint_test: data/joint_test

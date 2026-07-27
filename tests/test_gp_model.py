@@ -1,6 +1,8 @@
 import pytest
-import torch
-import gpytorch
+
+torch = pytest.importorskip("torch")
+gpytorch = pytest.importorskip("gpytorch")
+
 from fertility_popeve.gp.model import PGLikelihood, PopEVEGP
 
 

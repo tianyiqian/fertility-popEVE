@@ -1,14 +1,14 @@
-from pathlib import Path
+import itertools
 import random
 import subprocess
 import sys
-import itertools
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from pathlib import Path
 
+import gpytorch
 import numpy as np
 import pandas as pd
 import torch
-import gpytorch
 
 from fertility_popeve.gp.model import PGLikelihood, PopEVEGP
 
@@ -407,7 +407,7 @@ def _train_gp_subprocess(
     csv_path = Path(csv_path).resolve()
     output_dir = Path(output_dir).resolve()
 
-    project_root = Path(__file__).resolve().parents[2]
+    project_root = str(Path(__file__).resolve().parents[2])
 
     mem_preamble = ""
     if mem_limit_gb:

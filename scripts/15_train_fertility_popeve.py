@@ -13,13 +13,14 @@ Output directories mirror the official ``train_popEVE_models.sh`` layout:
     {gp_dir}/losses_and_lengthscales/ — training history CSVs
 """
 
-from pathlib import Path
 import sys
+from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
 import torch  # noqa: E402
+
 from fertility_popeve.gp.trainer import (  # noqa: E402
     train_eligible_proteins,
     train_eligible_proteins_multi_gpu,

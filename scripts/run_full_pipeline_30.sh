@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
-cd /home/tian/fertility_popEVE
+SCRIPT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$SCRIPT_DIR"
 
 LOG="logs/pipeline_30_$(date +%Y%m%d_%H%M%S).log"
 exec > >(tee "$LOG") 2>&1
@@ -25,13 +26,13 @@ run_step() {
     local env_name="${2:-popeve}"
     echo ""
     echo "=== $(date) $step ==="
-    export PYTHONPATH=/home/tian/fertility_popEVE
+    export PYTHONPATH=$SCRIPT_DIR
     conda run --no-capture-output -n "$env_name" python3 "$step" || fail "$step failed"
     echo "--- $(date) $step DONE ---"
 }
 
 echo "[$(date)] Step 1: VEP annotation"
-export PYTHONPATH=/home/tian/fertility_popEVE
+export PYTHONPATH=$SCRIPT_DIR
 conda run --no-capture-output -n popeve python3 scripts/01_run_vep.py || fail "VEP failed"
 echo "[$(date)] Step 1 done"
 
@@ -46,7 +47,7 @@ run_step scripts/09_validate_feature_matrix.py popeve
 
 echo ""
 echo "[$(date)] Step 10: GP candidate space"
-export PYTHONPATH=/home/tian/fertility_popEVE
+export PYTHONPATH=$SCRIPT_DIR
 conda run --no-capture-output -n popeve python3 scripts/14_build_gp_candidate_space.py || fail "candidate_space failed"
 echo "[$(date)] Step 10 done"
 
