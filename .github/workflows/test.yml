@@ -50,8 +50,7 @@ jobs:
 
       - name: Install GP dependencies
         run: |
-          conda install -c conda-forge pyyaml pandas pyarrow pytest numpy -y
-          conda install -c pytorch pytorch gpytorch -y
+          conda install -c pytorch -c conda-forge pyyaml pandas pyarrow pytest numpy pytorch gpytorch -y
 
       - name: Run GP tests
         run: |
